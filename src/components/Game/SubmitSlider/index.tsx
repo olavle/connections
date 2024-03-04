@@ -21,8 +21,6 @@ export const SubmitSlider = () => {
     }
   }, []);
 
-  console.log({ buttonWidth });
-
   const [buttonPosition, setButtonPosition] = useState(0);
 
   const [springs, api] = useSpring(() => ({

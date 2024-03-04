@@ -8,7 +8,7 @@ import {
 } from "react";
 import { IGameBoardWord } from "../types";
 import * as R from "ramda";
-import { getUpdatedWordsList, groupeWordsByCategory } from "../lib/lib";
+import { getUpdatedWordsList, groupWordsByCategory } from "../lib/lib";
 
 const MAX_SELECTED_WORDS = 4 as const;
 
@@ -34,7 +34,7 @@ export const GameBoardContextProvider = ({
   const [words, setWords] = useState<IGameBoardWord[]>(inputWords || []);
   const [wrongAnswers, setWrongAnswers] = useState(1);
 
-  const updateWords = (newWords: IGameBoardWord[]) => {
+  const updateWords = (newWords: IGameBoardWord[], words: IGameBoardWord[]) => {
     const updatedWords = getUpdatedWordsList(newWords, words);
 
     setWords(updatedWords);
@@ -50,6 +50,9 @@ export const GameBoardContextProvider = ({
     if (!selectedWord) {
       throw new Error("Selected word has to exist");
     }
+    if (selectedWord.isGuessedCorrect) {
+      return;
+    }
 
     const updatedWord: IGameBoardWord = {
       ...selectedWord,
@@ -63,24 +66,29 @@ export const GameBoardContextProvider = ({
     );
   };
 
+  const handleCorrectAnswer = (
+    selectedWords: IGameBoardWord[],
+    allWords: IGameBoardWord[]
+  ) => {
+    const restWords = allWords.filter((word) => !word.isSelected);
+    const updatedCorrectWords = selectedWords.map((word) => ({
+      ...word,
+      isGuessedCorrect: true,
+      isSelected: false,
+    }));
+
+    setWords([...updatedCorrectWords, ...restWords]);
+  };
+
   const checkIsCorrectWords = () => {
     if (selectedWords.length < 4) {
       return;
     }
     if (wrongAnswers < 3) {
-      const groupedWords = groupeWordsByCategory(selectedWords);
+      const groupedWords = groupWordsByCategory(selectedWords);
 
       if (groupedWords.length === 1) {
-        console.log("correct");
-        const words = groupedWords[0];
-
-        updateWords(
-          words.map((word) => ({
-            ...word,
-            isGuessedCorrect: true,
-            isSelected: false,
-          }))
-        );
+        handleCorrectAnswer(groupedWords[0], words);
 
         return;
       }

@@ -1,7 +1,7 @@
 import { IGameBoardWord } from "../types";
 import * as R from "ramda";
 
-export const groupeWordsByCategory = R.groupWith<IGameBoardWord>(
+export const groupWordsByCategory = R.groupWith<IGameBoardWord>(
   (a, b) => a.categoryId === b.categoryId
 );
 
