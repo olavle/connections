@@ -19,10 +19,8 @@ const StyledBoardWord = styled.div<IStyledBoardWordProps>`
   user-select: none;
   text-align: center;
   box-shadow: 0 0 0 1px;
-  margin: 0.5rem;
 
   ${({ $isSelected, $isGuessedCorrect, $isMobile }) => css`
-    margin: ${$isMobile && "0"};
     font-size: ${$isMobile && "0.9rem"};
     background-color: ${() => {
       if ($isGuessedCorrect) {

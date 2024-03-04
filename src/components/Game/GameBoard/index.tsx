@@ -10,13 +10,9 @@ interface IProps {}
 const StyledGameBoard = styled.div``;
 
 export const GameBoard: FC<IProps> = () => {
-  const { words } = useGameBoardContext();
-
-  const wordColumns = R.splitEvery(4, words);
-
   return (
     <StyledGameBoard>
-      <WordGrid wordColumns={wordColumns} />
+      <WordGrid />
       <InfoSection />
     </StyledGameBoard>
   );

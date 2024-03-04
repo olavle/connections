@@ -7,10 +7,7 @@ interface IProps {
   words: IGameBoardWord[];
 }
 
-const StyledBoardLine = styled.div`
-  display: grid;
-  grid-template-rows: repeat(4) auto;
-`;
+const StyledBoardLine = styled.div``;
 
 export const BoardLine: FC<IProps> = ({ words }) => {
   return (
