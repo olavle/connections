@@ -7,10 +7,10 @@ import {
   useState,
 } from "react";
 import { IGameBoardWord } from "../types";
-import * as R from "ramda";
 import { getUpdatedWordsList, groupWordsByCategory } from "../lib/lib";
 
-const MAX_SELECTED_WORDS = 4 as const;
+const MAX_SELECTED_WORDS = 4;
+const MAX_TRIES = 3;
 
 interface IContext {
   words: IGameBoardWord[];
@@ -20,6 +20,7 @@ interface IContext {
   isIncompleteSelection: boolean;
   checkIsCorrectWords: () => void;
   wrongAnswers: number;
+  correctWords: IGameBoardWord[];
 }
 
 export const GameBoardContext = createContext<IContext | null>(null);
@@ -33,6 +34,7 @@ export const GameBoardContextProvider = ({
 }) => {
   const [words, setWords] = useState<IGameBoardWord[]>(inputWords || []);
   const [wrongAnswers, setWrongAnswers] = useState(1);
+  const [correctWords, setCorrectWords] = useState<IGameBoardWord[]>([]);
 
   const updateWords = (newWords: IGameBoardWord[], words: IGameBoardWord[]) => {
     const updatedWords = getUpdatedWordsList(newWords, words);
@@ -77,24 +79,22 @@ export const GameBoardContextProvider = ({
       isSelected: false,
     }));
 
-    setWords([...updatedCorrectWords, ...restWords]);
+    setCorrectWords([...correctWords, ...updatedCorrectWords]);
+    setWords(restWords);
   };
 
   const checkIsCorrectWords = () => {
     if (selectedWords.length < 4) {
       return;
     }
-    if (wrongAnswers < 3) {
-      const groupedWords = groupWordsByCategory(selectedWords);
+    const groupedWords = groupWordsByCategory(selectedWords);
 
-      if (groupedWords.length === 1) {
-        handleCorrectAnswer(groupedWords[0], words);
-
-        return;
-      }
-
-      setWrongAnswers(wrongAnswers + 1);
+    if (groupedWords.length === 1) {
+      handleCorrectAnswer(groupedWords[0], words);
+      return;
     }
+
+    setWrongAnswers(wrongAnswers + 1);
   };
 
   return (
@@ -107,6 +107,7 @@ export const GameBoardContextProvider = ({
         isIncompleteSelection,
         checkIsCorrectWords,
         wrongAnswers,
+        correctWords,
       }}
     >
       {children}

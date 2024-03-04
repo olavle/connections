@@ -8,29 +8,32 @@ interface IProps extends IBaseProps {
   action?: () => void;
   forwardRef?: RefObject<HTMLButtonElement>;
   springs?: AnimatedProps<any>;
+  fullWidth?: boolean;
 }
 
 interface IStyledButtonProps {
   $isMouseDown: boolean;
+  $fullWidth: boolean;
 }
 
 const StyledButton = styled(animated.button)<IStyledButtonProps>`
   padding: 1rem;
-  margin: 1rem;
   color: ${colorPick.text};
   font-weight: 600;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: ${(props) =>
-    props.$isMouseDown ? colorPick.secondary : colorPick.secondary};
+    props.$isMouseDown ? colorPick.secondary : colorPick.yellow};
   border: 2px solid ${colorPick.primary};
   border-radius: 1rem;
+  font-size: 2rem;
+  width: ${({ $fullWidth }) => $fullWidth && "100%"};
 
   ${({ $isMouseDown }) =>
     $isMouseDown &&
     css`
       box-shadow: inset 1px 1px 2px black;
       font-style: italic;
-    `}
+    `};
 `;
 
 export const Button: FC<IProps> = ({
@@ -38,6 +41,7 @@ export const Button: FC<IProps> = ({
   forwardRef,
   children,
   springs,
+  fullWidth = false,
   ...restProps
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -50,8 +54,10 @@ export const Button: FC<IProps> = ({
   return (
     <StyledButton
       $isMouseDown={isMouseDown}
+      $fullWidth={fullWidth}
       onMouseDown={() => setIsMouseDown(true)}
       onMouseUp={handleMouseUp}
+      onMouseLeave={() => setIsMouseDown(false)}
       ref={forwardRef}
       style={{
         ...springs,

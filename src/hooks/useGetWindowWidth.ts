@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const MIN_WIDTH = 800;
+
 export const useGetWindowWidth = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -12,7 +14,7 @@ export const useGetWindowWidth = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isMobile = windowWidth < 375;
+  const isMobile = windowWidth < MIN_WIDTH;
 
   return {
     windowWidth,

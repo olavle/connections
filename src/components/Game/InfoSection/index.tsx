@@ -1,14 +1,23 @@
 import styled from "styled-components";
 import { SubmitSlider } from "../SubmitSlider";
+import { Button } from "../../ui/Button";
+import { useGameBoardContext } from "../GameBoardContext";
 
 const StyledInfoSection = styled.div`
-  width: 100%;
+  padding: 1rem;
 `;
 
 export const InfoSection = () => {
+  const { checkIsCorrectWords, wrongAnswers } = useGameBoardContext();
+
+  const handleCheckResult = () => {
+    checkIsCorrectWords();
+  };
   return (
     <StyledInfoSection>
-      <SubmitSlider />
+      <Button action={handleCheckResult} fullWidth>
+        Check
+      </Button>
     </StyledInfoSection>
   );
 };
