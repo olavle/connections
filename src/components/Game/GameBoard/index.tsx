@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { IGameBoardWord } from "../types";
 import * as R from "ramda";
-import { BoardLine } from "../BoardLine";
 import styled from "styled-components";
 import { useGameBoardContext } from "../GameBoardContext";
 import { WordGrid } from "../WordGrid";
+import { InfoSection } from "../InfoSection";
 
 interface IProps {}
 
@@ -18,6 +17,7 @@ export const GameBoard: FC<IProps> = () => {
   return (
     <StyledGameBoard>
       <WordGrid wordColumns={wordColumns} />
+      <InfoSection />
     </StyledGameBoard>
   );
 };

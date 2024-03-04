@@ -5,8 +5,7 @@ import { BoardLine } from "../BoardLine";
 
 const StyledGameBoard = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr) auto;
-  column-gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
 `;
 
 interface IProps {

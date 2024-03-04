@@ -1,6 +1,14 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { IGameBoardWord } from "../types";
 import * as R from "ramda";
+import { getUpdatedWordsList, groupeWordsByCategory } from "../lib/lib";
 
 const MAX_SELECTED_WORDS = 4 as const;
 
@@ -10,6 +18,8 @@ interface IContext {
   toggleWordSelect: (word: string) => void;
   selectedWords: IGameBoardWord[];
   isIncompleteSelection: boolean;
+  checkIsCorrectWords: () => void;
+  wrongAnswers: number;
 }
 
 export const GameBoardContext = createContext<IContext | null>(null);
@@ -22,6 +32,13 @@ export const GameBoardContextProvider = ({
   inputWords: IGameBoardWord[] | null;
 }) => {
   const [words, setWords] = useState<IGameBoardWord[]>(inputWords || []);
+  const [wrongAnswers, setWrongAnswers] = useState(1);
+
+  const updateWords = (newWords: IGameBoardWord[]) => {
+    const updatedWords = getUpdatedWordsList(newWords, words);
+
+    setWords(updatedWords);
+  };
 
   const selectedWords = words.filter(({ isSelected }) => isSelected);
 
@@ -34,16 +51,42 @@ export const GameBoardContextProvider = ({
       throw new Error("Selected word has to exist");
     }
 
-    const editedWord: IGameBoardWord = {
+    const updatedWord: IGameBoardWord = {
       ...selectedWord,
       isSelected: isIncompleteSelection ? !selectedWord.isSelected : false,
     };
 
     setWords(
       words.map((word) => {
-        return word.word === selectedWord.word ? editedWord : word;
+        return word.word === selectedWord.word ? updatedWord : word;
       })
     );
+  };
+
+  const checkIsCorrectWords = () => {
+    if (selectedWords.length < 4) {
+      return;
+    }
+    if (wrongAnswers < 3) {
+      const groupedWords = groupeWordsByCategory(selectedWords);
+
+      if (groupedWords.length === 1) {
+        console.log("correct");
+        const words = groupedWords[0];
+
+        updateWords(
+          words.map((word) => ({
+            ...word,
+            isGuessedCorrect: true,
+            isSelected: false,
+          }))
+        );
+
+        return;
+      }
+
+      setWrongAnswers(wrongAnswers + 1);
+    }
   };
 
   return (
@@ -54,6 +97,8 @@ export const GameBoardContextProvider = ({
         toggleWordSelect,
         selectedWords,
         isIncompleteSelection,
+        checkIsCorrectWords,
+        wrongAnswers,
       }}
     >
       {children}

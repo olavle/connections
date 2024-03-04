@@ -10,7 +10,6 @@ interface IProps {
 const StyledBoardLine = styled.div`
   display: grid;
   grid-template-rows: repeat(4) auto;
-  row-gap: 1rem;
 `;
 
 export const BoardLine: FC<IProps> = ({ words }) => {

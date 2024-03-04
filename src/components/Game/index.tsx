@@ -1,7 +1,8 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { GameBoard } from "./GameBoard";
 import { IGameBoardWord } from "./types";
 import { GameBoardContextProvider } from "./GameBoardContext";
+import styled from "styled-components";
 
 interface IProps {}
 
@@ -88,13 +89,21 @@ const dummyWords: IGameBoardWord[] = [
   },
 ];
 
+const StyledGame = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40rem;
+`;
+
 export const Game: FC<IProps> = () => {
   // fetch words here
   return (
-    <div>
-      <GameBoardContextProvider inputWords={dummyWords}>
-        <GameBoard />;
-      </GameBoardContextProvider>
-    </div>
+    <GameBoardContextProvider inputWords={dummyWords}>
+      <StyledGame>
+        <GameBoard />
+      </StyledGame>
+    </GameBoardContextProvider>
   );
 };
