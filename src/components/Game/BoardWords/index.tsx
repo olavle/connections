@@ -16,7 +16,7 @@ export const BoardWords = () => {
 
   return (
     <StyledBoardWords>
-      <WordGrid words={words} size={words.length / 4} />
+      <WordGrid words={words} rows={words.length / 4} />
     </StyledBoardWords>
   );
 };
